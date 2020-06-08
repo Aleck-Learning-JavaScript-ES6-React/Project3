@@ -98,11 +98,11 @@ window.addEventListener('DOMContentLoaded', () => {
 
     //Modal window
     const modalTrigger = document.querySelectorAll('[data-modal]'),
-        modalWindow = document.querySelector('.modal'),
-        modalClose = document.querySelector('[data-close]');
+        modalWindow = document.querySelector('.modal');
 
     function openModal() {
-        modalWindow.style.display = 'block';
+        modalWindow.classList.add('show');
+        modalWindow.classList.remove('hide');
         document.body.style.overflow = 'hidden';
         clearInterval(modalTimerId);
     }
@@ -112,15 +112,14 @@ window.addEventListener('DOMContentLoaded', () => {
     });
 
     function closeModal() {
-        modalWindow.style.display = 'none';
+        modalWindow.classList.add('hide');
+        modalWindow.classList.remove('show');
         document.body.style.overflow = '';
     }
 
-    modalClose.addEventListener('click', closeModal);
-
     //Закрытие модального окна при щелчке на подложке
     modalWindow.addEventListener('click', (e) => {
-        if (e.target === modalWindow) {
+        if (e.target === modalWindow || e.target.getAttribute('data-close') == '') {
             closeModal();
         }
     });
@@ -218,7 +217,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const forms = document.querySelectorAll('form');
 
     const message = {
-        loading: 'Загрузка',
+        loading: 'img/form/spinner.svg',
         success: 'Спасибо! Мы с вами свяжемся',
         failure: 'Что-то пошло не так...'
     };
@@ -231,10 +230,14 @@ window.addEventListener('DOMContentLoaded', () => {
         form.addEventListener('submit', (e) => {
             e.preventDefault();
 
-            const statusMessage = document.createElement('div');
-            statusMessage.classList.add('status');
-            statusMessage.textContent = message.loading;
+            const statusMessage = document.createElement('img');
+            statusMessage.src = message.loading;    
+            statusMessage.style.cssText = `
+                display: block;
+                margin: 0 auto;
+            `;
             form.append(statusMessage);
+            form.insertAdjacentElement('afterend',statusMessage);
 
             const request = new XMLHttpRequest();
             request.open('POST', 'server.php');
@@ -254,15 +257,37 @@ window.addEventListener('DOMContentLoaded', () => {
             request.addEventListener('load', () => {
                 if (request.status === 200) {
                     console.log(request.response);
-                    statusMessage.textContent = message.success;
+                    showThanksModal(message.success);
                     form.reset();
-                    setTimeout(() => {
-                        statusMessage.remove();
-                    }, 2000);
+                    statusMessage.remove();
                 } else {
-                    statusMessage.textContent = message.failure;
+                    showThanksModal(message.failure);
                 }
             });
         });
     }
+
+    //Изменияем существующее модальное окно
+    function showThanksModal(message) {
+        const prevModalDialog = document.querySelector('.modal__dialog');
+
+        prevModalDialog.classList.add('hide'); //Скрываем окно, потом может понадобится
+        openModal();
+
+        const thanksModal = document.createElement('div');
+        thanksModal.classList.add('modal__dialog');
+        thanksModal.innerHTML = `
+                <div class="modal__content">
+                    <div class="modal__close" data-close>&times;</div>
+                    <div class="modal__title">${message}</div>
+                </div>`;
+        document.querySelector('.modal').append(thanksModal);
+        setTimeout(() => {
+            thanksModal.remove();
+            prevModalDialog.classList.add('show');
+            prevModalDialog.classList.remove('hide');
+            closeModal();
+        }, 4000); //По истечении времени измененное окно закрывается, а при повторном открытии появится первоначальное окно
+    }
+
 });
