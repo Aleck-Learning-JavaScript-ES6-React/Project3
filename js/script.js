@@ -304,4 +304,8 @@ window.addEventListener('DOMContentLoaded', () => {
         }, 4000); //По истечении времени измененное окно закрывается, а при повторном открытии появится первоначальное окно
     }
 
+    fetch('http://localhost:3000/menu')
+        .then(data => data.json())
+        .then(res => console.log(res));
+
 });
