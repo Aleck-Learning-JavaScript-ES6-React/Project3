@@ -40,7 +40,7 @@ window.addEventListener('DOMContentLoaded', () => {
     });
 
     //Timer
-    const deadline = '2020-06-31';
+    const deadline = '2020-07-30';
 
     function getTimeRemaining(endtime) {
         const t = Date.parse(endtime) - Date.parse(new Date()),
@@ -190,9 +190,16 @@ window.addEventListener('DOMContentLoaded', () => {
         return await res.json();
     };
 
-    getResource('http://localhost:3000/menu')
+    // getResource('http://localhost:3000/menu')
+    //     .then(data => {
+            // data.forEach(({img, altimg,title, descr, price}) => {
+            //     new MenuCard(img, altimg, title, descr, price, '.menu .container').render();
+            // });
+    //     });
+    //ИТспользуем библиотеку axios
+    axios.get('http://localhost:3000/menu') //используем библиотеку axios
         .then(data => {
-            data.forEach(({img, altimg,title, descr, price}) => {
+            data.data.forEach(({img, altimg,title, descr, price}) => {
                 new MenuCard(img, altimg, title, descr, price, '.menu .container').render();
             });
         });
@@ -298,5 +305,46 @@ window.addEventListener('DOMContentLoaded', () => {
     // fetch('http://localhost:3000/menu')
     //     .then(data => data.json())
     //     .then(res => console.log(res));
+
+    //Slider (var. 1)
+    const sliderTextCurrent = document.querySelector('#current'),
+        sliderTextTotal = document.querySelector('#total'),
+        slides = document.querySelectorAll('.offer__slide'),
+        sliderPrev = document.querySelector('.offer__slider-prev'),
+        sliderNext = document.querySelector('.offer__slider-next'),
+        slidersTotal = slides.length;
+
+    let sliderCount = 1;    
+    
+    //Функция показа слайда
+    function showSlide() {
+        slides.forEach(item => {
+            item.classList.add('hide');
+            item.classList.remove('show');
+        });
+        
+        slides[sliderCount-1].classList.add('show');
+        slides[sliderCount-1].classList.remove('hide');
+
+        sliderTextCurrent.textContent = getZero(sliderCount);
+    }  
+    
+    sliderTextTotal.textContent = getZero(slidersTotal);
+    showSlide();  
+    
+
+    sliderPrev.addEventListener('click', (e) => {
+        if (--sliderCount===0) {
+            sliderCount=slidersTotal;
+        }
+        showSlide();
+    });
+
+    sliderNext.addEventListener('click', (e) => {
+        if (++sliderCount>slidersTotal) {
+            sliderCount=1;
+        }
+        showSlide();
+    });
 
 });
