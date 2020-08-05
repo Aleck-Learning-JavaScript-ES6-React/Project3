@@ -307,7 +307,7 @@ window.addEventListener('DOMContentLoaded', () => {
     //     .then(res => console.log(res));
 
     //Slider (var. 1)
-    const sliderTextCurrent = document.querySelector('#current'),
+    /* const sliderTextCurrent = document.querySelector('#current'),
         sliderTextTotal = document.querySelector('#total'),
         slides = document.querySelectorAll('.offer__slide'),
         sliderPrev = document.querySelector('.offer__slider-prev'),
@@ -345,6 +345,59 @@ window.addEventListener('DOMContentLoaded', () => {
             sliderCount=1;
         }
         showSlide();
+    }); */
+
+    //Slider (var. 2) - карусель
+    const current = document.querySelector('#current'),
+        total = document.querySelector('#total'),
+        slides = document.querySelectorAll('.offer__slide'),
+        prev = document.querySelector('.offer__slider-prev'),
+        next = document.querySelector('.offer__slider-next'),
+        slidesWrapper = document.querySelector('.offer__slider-wrapper'),
+        slidesField = document.querySelector('.offer__slider-inner'),
+        width = window.getComputedStyle(slidesWrapper).width;
+    let slideIndex = 1,
+        offset = 0;
+
+    total.textContent = getZero(slides.length);
+    current.textContent = getZero(slideIndex);
+    
+    slidesField.style.width = 100*slides.length+"%";
+    slidesField.style.display = 'flex'; //выстраивание объектов вдоль горизонтальной оси
+    slidesField.style.transition = '0.5s all'; //настройка стиля смены слайдов 
+
+    slidesWrapper.style.overflow = 'hidden'; //Отображается только область внутри элемента, остальное будет скрыто. 
+
+    slides.forEach(slide => {
+        slide.style.width=width;
+    });
+
+    next.addEventListener('click', () => {
+        if (offset == +width.slice(0, width.length - 2) * (slides.length - 1)) {
+            offset = 0;
+        } else {
+            offset += +width.slice(0, width.length - 2);
+        }
+        slidesField.style.transform = `translateX(-${offset}px)`;
+
+        if (++slideIndex>slides.length) {
+            slideIndex=1;
+        }
+        current.textContent = getZero(slideIndex);
+    });
+
+    prev.addEventListener('click', () => {
+        if (offset == 0) {
+            offset = +width.slice(0, width.length - 2) * (slides.length - 1);
+        } else {
+            offset -= +width.slice(0, width.length - 2);
+        }
+        slidesField.style.transform = `translateX(-${offset}px)`;
+
+        if (--slideIndex===0) {
+            slideIndex=slides.length;
+        }
+        current.textContent = getZero(slideIndex);
     });
 
 });
