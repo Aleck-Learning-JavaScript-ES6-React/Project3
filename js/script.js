@@ -509,7 +509,7 @@ window.addEventListener('DOMContentLoaded', () => {
             if (elem.getAttribute('data-ratio') === localStorage.getItem('ratio')) {
                 elem.classList.add(activeClass);
             }
-        })
+        });
     }   
 
     initLocalSettings('#gender div','calculating__choose-item_active');
