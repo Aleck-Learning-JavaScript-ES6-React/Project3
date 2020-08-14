@@ -1,4 +1,4 @@
-function slider() {
+function slider({container, slide, nextArrow, prevArrow, totalCounter, currentCounter, wrapper, field}) {
 
     function getZero(num) {
         if (num >= 0 && num < 10) {
@@ -6,59 +6,18 @@ function slider() {
         } else {
             return num;
         }
-    }
-    
-    /* //Slider (var. 1)
-         const sliderTextCurrent = document.querySelector('#current'),
-            sliderTextTotal = document.querySelector('#total'),
-            slides = document.querySelectorAll('.offer__slide'),
-            sliderPrev = document.querySelector('.offer__slider-prev'),
-            sliderNext = document.querySelector('.offer__slider-next'),
-            slidersTotal = slides.length;
-
-        let sliderCount = 1;    
-        
-        //Функция показа слайда
-        function showSlide() {
-            slides.forEach(item => {
-                item.classList.add('hide');
-                item.classList.remove('show');
-            });
-            
-            slides[sliderCount-1].classList.add('show');
-            slides[sliderCount-1].classList.remove('hide');
-
-            sliderTextCurrent.textContent = getZero(sliderCount);
-        }  
-        
-        sliderTextTotal.textContent = getZero(slidersTotal);
-        showSlide();  
-        
-
-        sliderPrev.addEventListener('click', (e) => {
-            if (--sliderCount===0) {
-                sliderCount=slidersTotal;
-            }
-            showSlide();
-        });
-
-        sliderNext.addEventListener('click', (e) => {
-            if (++sliderCount>slidersTotal) {
-                sliderCount=1;
-            }
-            showSlide();
-        }); */
+    }    
 
     //Slider (var. 2) - карусель
-    const current = document.querySelector('#current'),
-        total = document.querySelector('#total'),
-        slides = document.querySelectorAll('.offer__slide'),
-        prev = document.querySelector('.offer__slider-prev'),
-        next = document.querySelector('.offer__slider-next'),
-        slidesWrapper = document.querySelector('.offer__slider-wrapper'),
-        slidesField = document.querySelector('.offer__slider-inner'),
+    const current = document.querySelector(currentCounter),
+        total = document.querySelector(totalCounter),
+        slides = document.querySelectorAll(slide),
+        prev = document.querySelector(prevArrow),
+        next = document.querySelector(nextArrow),
+        slidesWrapper = document.querySelector(wrapper),
+        slidesField = document.querySelector(field),
         width = window.getComputedStyle(slidesWrapper).width,
-        slider = document.querySelector('.offer__slider');
+        slider = document.querySelector(container);
 
     let slideIndex = 1,
         offset = 0;
@@ -181,4 +140,45 @@ function slider() {
     });
 }
 
-module.exports = slider;
+export default slider;
+
+/* //Slider (var. 1)
+         const sliderTextCurrent = document.querySelector('#current'),
+            sliderTextTotal = document.querySelector('#total'),
+            slides = document.querySelectorAll('.offer__slide'),
+            sliderPrev = document.querySelector('.offer__slider-prev'),
+            sliderNext = document.querySelector('.offer__slider-next'),
+            slidersTotal = slides.length;
+
+        let sliderCount = 1;    
+        
+        //Функция показа слайда
+        function showSlide() {
+            slides.forEach(item => {
+                item.classList.add('hide');
+                item.classList.remove('show');
+            });
+            
+            slides[sliderCount-1].classList.add('show');
+            slides[sliderCount-1].classList.remove('hide');
+
+            sliderTextCurrent.textContent = getZero(sliderCount);
+        }  
+        
+        sliderTextTotal.textContent = getZero(slidersTotal);
+        showSlide();  
+        
+
+        sliderPrev.addEventListener('click', (e) => {
+            if (--sliderCount===0) {
+                sliderCount=slidersTotal;
+            }
+            showSlide();
+        });
+
+        sliderNext.addEventListener('click', (e) => {
+            if (++sliderCount>slidersTotal) {
+                sliderCount=1;
+            }
+            showSlide();
+        }); */
